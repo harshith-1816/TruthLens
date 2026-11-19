@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TruthLens – Multimodal Digital Forensics & Deepfake Detection</title>
+  <!-- Tailwind CSS & Lucide Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            cyber: {
+              900: '#0b0f19',
+              800: '#111827',
+              700: '#1f2937',
+              600: '#374151',
+              accent: '#06b6d4',
+              glow: '#0891b2',
+              danger: '#f43f5e',
+              warning: '#f59e0b',
+              success: '#10b981'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Fira Code', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0b0f19;
+      color: #f1f5f9;
+      font-family: 'Inter', sans-serif;
+    }
+    .mono { font-family: 'Fira Code', monospace; }
+    .glass-panel {
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(55, 65, 81, 0.5);
+    }
+    .neon-border {
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+    }
+    .tab-active {
+      border-bottom: 2px solid #06b6d4;
+      color: #06b6d4;
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0b0f19; }
+    ::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="border-b border-gray-800 bg-cyber-900/90 sticky top-0 z-50 backdrop-blur">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white shadow-lg shadow-cyan-500/30">
+          <i class="fa-solid fa-fingerprint text-xl"></i>
+        </div>
+        <div>
+          <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-300 bg-clip-text text-transparent">TruthLens</span>
+          <span class="text-xs ml-2 px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 font-mono">FORENSIC v1.0</span>
+        </div>
+      </div>
+      <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-2 text-xs font-mono text-gray-400">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>POSTGRESQL & MINIO STORAGE ONLINE</span>
+        </div>
+        <a href="/docs" target="_blank" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded border border-gray-700 transition">
+          <i class="fa-solid fa-book-open mr-1"></i> REST API Docs
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+    <!-- Hero / Workflow Bar -->
+    <div class="glass-panel rounded-xl p-6 relative overflow-hidden">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-bold text-white flex items-center gap-2">
+            Multimodal Digital Forensics & Deepfake Detection Engine
+          </h1>
+          <p class="text-sm text-gray-400 mt-1 max-w-2xl">
+            Inspects image, video, audio, and text evidence; identifies synthesis & editing indicators; cross-correlates orthogonal signals; and produces an explainable, calibrated forensic report.
+          </p>
+        </div>
+        <!-- 5-Step Workflow Tracker -->
+        <div class="flex items-center space-x-2 text-xs font-mono bg-cyber-800 p-2.5 rounded-lg border border-gray-700">
+          <span class="px-2 py-1 rounded bg-cyan-900/60 text-cyan-300 border border-cyan-700">1. INGEST</span>
+          <i class="fa-solid fa-arrow-right text-gray-600"></i>
+          <span class="px-2 py-1 rounded bg-cyan-900/60 text-cyan-300 border border-cyan-700">2. ANALYZE</span>
+          <i class="fa-solid fa-arrow-right text-gray-600"></i>
+          <span class="px-2 py-1 rounded bg-cyan-900/60 text-cyan-300 border border-cyan-700">3. CORRELATE</span>
+          <i class="fa-solid fa-arrow-right text-gray-600"></i>
+          <span class="px-2 py-1 rounded bg-cyan-900/60 text-cyan-300 border border-cyan-700">4. CALIBRATE</span>
+          <i class="fa-solid fa-arrow-right text-gray-600"></i>
+          <span class="px-2 py-1 rounded bg-cyan-900/60 text-cyan-300 border border-cyan-700">5. REPORT</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pre-Configured Sample Cases Section -->
+    <div class="space-y-3">
+      <div class="flex items-center justify-between">
+        <h2 class="text-sm font-semibold tracking-wide uppercase text-cyan-400 font-mono flex items-center gap-2">
+          <i class="fa-solid fa-vial"></i> Fast-Track Verification Test Packages
+        </h2>
+        <span class="text-xs text-gray-400">Click any package to trigger real-time multimodal analysis</span>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4" id="sample-cases-grid">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+
+    <!-- Custom Evidence Ingestion Section -->
+    <div class="glass-panel rounded-xl p-6">
+      <h2 class="text-base font-bold text-white mb-4 flex items-center justify-between">
+        <span class="flex items-center gap-2"><i class="fa-solid fa-upload text-cyan-400"></i> Custom Evidence Ingestion & Cryptographic Registration</span>
+        <span class="text-xs font-normal text-gray-400">Every file stored in MinIO/S3 with SHA-256 hash & MIME-type</span>
+      </h2>
+
+      <form id="evidence-form" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-medium text-gray-300 mb-1">Case Title / Reference</label>
+            <input type="text" id="case_title" value="Operation Verification Task - Multimodal Incident" class="w-full bg-cyber-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-cyan-500">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-300 mb-1">Lead Forensic Examiner</label>
+            <input type="text" id="investigator" value="Cyber-Forensic Special Agent" class="w-full bg-cyber-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-cyan-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Image Ingest -->
+          <div class="border border-dashed border-gray-700 rounded-lg p-4 bg-cyber-800/50 hover:border-cyan-500/50 transition">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold text-gray-200"><i class="fa-solid fa-image text-cyan-400 mr-1.5"></i> Image Evidence</span>
+              <span class="text-[10px] text-gray-500 font-mono">JPG, PNG, TIFF</span>
+            </div>
+            <input type="file" id="file_image" accept="image/*" class="text-xs text-gray-400 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:bg-gray-700 file:text-gray-300 hover:file:bg-gray-600 w-full cursor-pointer">
+          </div>
+
+          <!-- Video Ingest -->
+          <div class="border border-dashed border-gray-700 rounded-lg p-4 bg-cyber-800/50 hover:border-cyan-500/50 transition">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold text-gray-200"><i class="fa-solid fa-video text-blue-400 mr-1.5"></i> Video Evidence</span>
+              <span class="text-[10px] text-gray-500 font-mono">MP4, MOV, GIF</span>
+            </div>
+            <input type="file" id="file_video" accept="video/*,image/gif" class="text-xs text-gray-400 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:bg-gray-700 file:text-gray-300 hover:file:bg-gray-600 w-full cursor-pointer">
+          </div>
+
+          <!-- Audio Ingest -->
+          <div class="border border-dashed border-gray-700 rounded-lg p-4 bg-cyber-800/50 hover:border-cyan-500/50 transition">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold text-gray-200"><i class="fa-solid fa-microphone text-emerald-400 mr-1.5"></i> Audio Evidence</span>
+              <span class="text-[10px] text-gray-500 font-mono">WAV, MP3, OGG</span>
+            </div>
+            <input type="file" id="file_audio" accept="audio/*" class="text-xs text-gray-400 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:bg-gray-700 file:text-gray-300 hover:file:bg-gray-600 w-full cursor-pointer">
+          </div>
+
+          <!-- Text / Caption Ingest -->
+          <div class="border border-dashed border-gray-700 rounded-lg p-4 bg-cyber-800/50 hover:border-cyan-500/50 transition">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold text-gray-200"><i class="fa-solid fa-align-left text-amber-400 mr-1.5"></i> Text Context</span>
+              <span class="text-[10px] text-gray-500 font-mono">TXT, Caption</span>
+            </div>
+            <textarea id="text_content" rows="2" placeholder="Accompanying social claim, caption, or statement..." class="w-full bg-cyber-900 border border-gray-700 rounded px-2 py-1 text-xs text-gray-200 focus:outline-none focus:border-cyan-500"></textarea>
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-2">
+          <button type="submit" id="submit-btn" class="px-6 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-lg font-semibold text-sm shadow-lg shadow-cyan-600/30 flex items-center gap-2 transition">
+            <i class="fa-solid fa-magnifying-glass-chart"></i> Launch Multimodal Forensic Analysis
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Real-Time Processing Spinner -->
+    <div id="loading-state" class="hidden glass-panel rounded-xl p-8 text-center space-y-4">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-400"></div>
+      <div class="font-mono text-sm text-cyan-300" id="loading-step-text">Ingesting evidence, computing SHA-256 hashes, and initializing pipeline...</div>
+      <div class="text-xs text-gray-500">Executing Fourier transforms, spectral roll-off, temporal jitter tracking, and cross-modal correlation...</div>
+    </div>
+
+    <!-- Active Forensic Report View -->
+    <div id="report-container" class="hidden space-y-6">
+      
+      <!-- Top Action Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-4 bg-cyber-800/90 p-4 rounded-xl border border-gray-700">
+        <div>
+          <div class="text-xs font-mono text-cyan-400" id="rep-case-id">CASE-XXXX | REP-XXXX</div>
+          <h2 class="text-xl font-bold text-white" id="rep-title">Forensic Examination Report</h2>
+        </div>
+        <div class="flex items-center gap-2">
+          <a id="btn-export-html" target="_blank" class="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded text-xs font-mono flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-file-pdf"></i> Standalone Dossier
+          </a>
+          <a id="btn-export-md" target="_blank" class="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded text-xs font-mono flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-file-lines"></i> Markdown
+          </a>
+          <a id="btn-export-json" target="_blank" class="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded text-xs font-mono flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-code"></i> JSON
+          </a>
+        </div>
+      </div>
+
+      <!-- Verdict & Calibrated Risk Meter Banner -->
+      <div id="verdict-banner" class="glass-panel rounded-xl p-6 border-l-4 transition">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+          <!-- Verdict Label -->
+          <div class="space-y-1">
+            <span class="text-xs font-mono uppercase tracking-wider text-gray-400">Overall Calibrated Verdict</span>
+            <div class="text-2xl font-black tracking-tight" id="verdict-text">HIGH_PROBABILITY_MANIPULATION</div>
+            <p class="text-xs text-gray-400 mt-2 leading-relaxed" id="verdict-summary">Summary</p>
+          </div>
+
+          <!-- Composite Score & Calibrated Certainty -->
+          <div class="flex items-center justify-center gap-8 py-2 border-y lg:border-y-0 lg:border-x border-gray-800">
+            <div class="text-center">
+              <div class="text-3xl font-extrabold font-mono" id="score-val">0</div>
+              <div class="text-[11px] font-mono uppercase text-gray-400">Risk Score (0-100)</div>
+            </div>
+            <div class="text-center">
+              <div class="text-3xl font-extrabold font-mono text-cyan-400" id="conf-val">0%</div>
+              <div class="text-[11px] font-mono uppercase text-gray-400">Calibrated Confidence</div>
+            </div>
+          </div>
+
+          <!-- Modality Breakdown -->
+          <div class="space-y-2">
+            <span class="text-xs font-mono uppercase text-gray-400">Modality Risk Breakdown</span>
+            <div class="grid grid-cols-2 gap-2 text-xs font-mono" id="modality-breakdown-bars">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="border-b border-gray-800 flex space-x-6 text-sm font-medium">
+        <button onclick="switchTab('tab-findings')" id="btn-tab-findings" class="py-3 px-1 tab-active flex items-center gap-2">
+          <i class="fa-solid fa-triangle-exclamation"></i> Flagged Indicators (<span id="indicator-count">0</span>)
+        </button>
+        <button onclick="switchTab('tab-crossmodal')" id="btn-tab-crossmodal" class="py-3 px-1 text-gray-400 hover:text-gray-200 flex items-center gap-2">
+          <i class="fa-solid fa-network-wired"></i> Cross-Modal Correlation (<span id="cm-count">0</span>)
+        </button>
+        <button onclick="switchTab('tab-visualizations')" id="btn-tab-visualizations" class="py-3 px-1 text-gray-400 hover:text-gray-200 flex items-center gap-2">
+          <i class="fa-solid fa-chart-line"></i> Spectral & Visualizations
+        </button>
+        <button onclick="switchTab('tab-uncertainty')" id="btn-tab-uncertainty" class="py-3 px-1 text-gray-400 hover:text-gray-200 flex items-center gap-2">
+          <i class="fa-solid fa-clipboard-check"></i> Uncertainty & Checklist
+        </button>
+        <button onclick="switchTab('tab-custody')" id="btn-tab-custody" class="py-3 px-1 text-gray-400 hover:text-gray-200 flex items-center gap-2">
+          <i class="fa-solid fa-shield-halved"></i> Chain of Custody
+        </button>
+      </div>
+
+      <!-- Tab 1: Flagged Indicators -->
+      <div id="tab-findings" class="space-y-4">
+        <div id="indicators-container" class="space-y-3">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+
+      <!-- Tab 2: Cross-Modal Correlation -->
+      <div id="tab-crossmodal" class="hidden space-y-4">
+        <div class="bg-cyber-800/50 p-4 rounded-lg border border-gray-700 text-xs text-gray-300">
+          <strong class="text-cyan-400">Cross-Modal Synthesis:</strong> TruthLens correlates signals between visual frames, audio acoustics, and context text. Corroborating signals increase probability certainty, while environmental contradictions reveal deceptive narratives.
+        </div>
+        <div id="crossmodal-container" class="space-y-3">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+
+      <!-- Tab 3: Spectral & Visualizations -->
+      <div id="tab-visualizations" class="hidden space-y-6">
+        <div id="visualizations-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+
+      <!-- Tab 4: Uncertainty & Human Checklist -->
+      <div id="tab-uncertainty" class="hidden space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="glass-panel p-5 rounded-xl space-y-3">
+            <h3 class="text-sm font-bold text-amber-400 font-mono flex items-center gap-2">
+              <i class="fa-solid fa-circle-question"></i> Known Uncertainty & Modality Limitations
+            </h3>
+            <ul id="uncertainty-list" class="space-y-2 text-xs text-gray-300 list-disc list-inside">
+              <!-- Rendered via JS -->
+            </ul>
+          </div>
+
+          <div class="glass-panel p-5 rounded-xl space-y-3">
+            <h3 class="text-sm font-bold text-blue-400 font-mono flex items-center gap-2">
+              <i class="fa-solid fa-scale-balanced"></i> Plausible Alternative Explanations
+            </h3>
+            <ul id="alternatives-list" class="space-y-2 text-xs text-gray-300 list-disc list-inside">
+              <!-- Rendered via JS -->
+            </ul>
+          </div>
+        </div>
+
+        <div class="glass-panel p-5 rounded-xl space-y-3">
+          <h3 class="text-sm font-bold text-emerald-400 font-mono flex items-center gap-2">
+            <i class="fa-solid fa-user-check"></i> Recommended Human Examiner Checklist
+          </h3>
+          <div id="checklist-container" class="space-y-2">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 5: Cryptographic Chain of Custody -->
+      <div id="tab-custody" class="hidden space-y-4">
+        <div class="glass-panel rounded-xl overflow-hidden">
+          <table class="min-w-full divide-y divide-gray-800 text-left text-xs font-mono">
+            <thead class="bg-cyber-800 text-gray-400">
+              <tr>
+                <th class="px-4 py-3">Timestamp (UTC)</th>
+                <th class="px-4 py-3">Action Event</th>
+                <th class="px-4 py-3">File Name</th>
+                <th class="px-4 py-3">SHA-256 Hash</th>
+                <th class="px-4 py-3">Investigator</th>
+              </tr>
+            </thead>
+            <tbody id="custody-tbody" class="divide-y divide-gray-800 text-gray-300">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-gray-800 py-4 bg-cyber-900 mt-12">
+    <div class="max-w-7xl mx-auto px-4 text-center text-xs text-gray-500 font-mono">
+      TruthLens Forensics Platform • Investigative Decision-Support Tool • Strictly for Evidentiary Review
+    </div>
+  </footer>
+
+  <!-- Frontend Logic -->
+  <script>
+    let activeReport = null;
+
+    // Load Sample Cases on mount
+    async function loadSampleCases() {
+      try {
+        const res = await fetch('/api/sample-cases');
+        const cases = await res.json();
+        const grid = document.getElementById('sample-cases-grid');
+        grid.innerHTML = '';
+
+        for (const [key, data] of Object.entries(cases)) {
+          const card = document.createElement('div');
+          card.className = "glass-panel p-4 rounded-lg cursor-pointer hover:border-cyan-500 transition group flex flex-col justify-between";
+          
+          let badges = '';
+          if (data.has_image) badges += '<span class="px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 text-[10px]">IMG</span> ';
+          if (data.has_video) badges += '<span class="px-1.5 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800 text-[10px]">VID</span> ';
+          if (data.has_audio) badges += '<span class="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 text-[10px]">AUD</span> ';
+          if (data.has_text) badges += '<span class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800 text-[10px]">TXT</span>';
+
+          card.innerHTML = `
+            <div>
+              <div class="flex items-center justify-between gap-1 mb-2">
+                <span class="text-xs font-bold text-white group-hover:text-cyan-400 transition">${data.title}</span>
+              </div>
+              <p class="text-[11px] text-gray-400 line-clamp-3 mb-3">${data.description}</p>
+            </div>
+            <div class="flex items-center justify-between pt-2 border-t border-gray-800">
+              <div class="flex gap-1">${badges}</div>
+              <button class="text-xs font-mono text-cyan-400 group-hover:translate-x-1 transition flex items-center gap-1">
+                Run <i class="fa-solid fa-chevron-right text-[10px]"></i>
+              </button>
+            </div>
+          `;
+          card.onclick = () => runSampleCase(key);
+          grid.appendChild(card);
+        }
+      } catch (err) {
+        console.error("Failed to load sample cases", err);
+      }
+    }
+
+    async function runSampleCase(caseKey) {
+      showLoading(true, `Executing forensic pipeline on ${caseKey.replace('_', ' ')}...`);
+      try {
+        const res = await fetch(`/api/analyze-sample/${caseKey}`, { method: 'POST' });
+        if (!res.ok) throw new Error("Failed to analyze sample case");
+        const report = await res.json();
+        renderReport(report);
+      } catch (err) {
+        alert("Error executing sample case: " + err.message);
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    // Submit Custom Evidence
+    document.getElementById('evidence-form').onsubmit = async (e) => {
+      e.preventDefault();
+      const form = new FormData();
+      form.append('case_title', document.getElementById('case_title').value);
+      form.append('investigator', document.getElementById('investigator').value);
+
+      const imgFile = document.getElementById('file_image').files[0];
+      if (imgFile) form.append('image', imgFile);
+
+      const vidFile = document.getElementById('file_video').files[0];
+      if (vidFile) form.append('video', vidFile);
+
+      const audFile = document.getElementById('file_audio').files[0];
+      if (audFile) form.append('audio', audFile);
+
+      const textStr = document.getElementById('text_content').value;
+      if (textStr.trim()) form.append('text_content', textStr.trim());
+
+      showLoading(true, "Ingesting evidence, recording SHA-256 hashes, running analyzers...");
+      try {
+        const res = await fetch('/api/analyze', { method: 'POST', body: form });
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.detail || "Analysis request failed");
+        }
+        const report = await res.json();
+        renderReport(report);
+      } catch (err) {
+        alert("Forensic Pipeline Error: " + err.message);
+      } finally {
+        showLoading(false);
+      }
+    };
+
+    function showLoading(show, text = "") {
+      const el = document.getElementById('loading-state');
+      const stepEl = document.getElementById('loading-step-text');
+      if (show) {
+        stepEl.innerText = text;
+        el.classList.remove('hidden');
+        document.getElementById('report-container').classList.add('hidden');
+      } else {
+        el.classList.add('hidden');
+      }
+    }
+
+    function renderReport(report) {
+      activeReport = report;
+      const repContainer = document.getElementById('report-container');
+      repContainer.classList.remove('hidden');
+
+      // Top bar
+      document.getElementById('rep-case-id').innerText = `${report.case_id} • ${report.report_id}`;
+      document.getElementById('rep-title').innerText = report.case_title;
+
+      document.getElementById('btn-export-html').href = `/api/reports/${report.report_id}/html`;
+      document.getElementById('btn-export-md').href = `/api/reports/${report.report_id}/markdown`;
+      document.getElementById('btn-export-json').href = `/api/reports/${report.report_id}`;
+
+      // Verdict Banner
+      const verdict = report.assessment.overall_verdict;
+      const score = report.assessment.overall_manipulation_score;
+      const conf = report.assessment.calibrated_confidence;
+      
+      const vBanner = document.getElementById('verdict-banner');
+      const vText = document.getElementById('verdict-text');
+      vText.innerText = verdict;
+      document.getElementById('verdict-summary').innerText = report.assessment.evidential_summary;
+      document.getElementById('score-val').innerText = score.toFixed(1);
+      document.getElementById('conf-val').innerText = conf.toFixed(1) + '%';
+
+      if (verdict.includes('MANIPULATION')) {
+        vBanner.style.borderColor = '#f43f5e';
+        vText.className = "text-2xl font-black text-rose-500 tracking-tight";
+      } else if (verdict.includes('SUSPICIOUS')) {
+        vBanner.style.borderColor = '#f59e0b';
+        vText.className = "text-2xl font-black text-amber-500 tracking-tight";
+      } else {
+        vBanner.style.borderColor = '#10b981';
+        vText.className = "text-2xl font-black text-emerald-500 tracking-tight";
+      }
+
+      // Modality Breakdown Bars
+      const breakdownEl = document.getElementById('modality-breakdown-bars');
+      breakdownEl.innerHTML = '';
+      for (const [mod, sc] of Object.entries(report.assessment.modality_breakdown)) {
+        breakdownEl.innerHTML += `
+          <div class="bg-cyber-900 p-2 rounded border border-gray-800">
+            <div class="flex justify-between text-gray-400 mb-1">
+              <span>${mod.toUpperCase()}</span>
+              <span>${sc}/100</span>
+            </div>
+            <div class="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden">
+              <div class="h-full bg-cyan-500 rounded-full" style="width: ${sc}%"></div>
+            </div>
+          </div>
+        `;
+      }
+
+      // Indicators
+      document.getElementById('indicator-count').innerText = report.all_indicators.length;
+      const indCont = document.getElementById('indicators-container');
+      indCont.innerHTML = '';
+      if (report.all_indicators.length === 0) {
+        indCont.innerHTML = '<div class="text-sm text-gray-400 p-4">No suspicious forensic indicators flagged.</div>';
+      } else {
+        report.all_indicators.forEach(ind => {
+          const sevColor = {
+            'CRITICAL': 'bg-rose-950 text-rose-300 border-rose-800',
+            'HIGH': 'bg-orange-950 text-orange-300 border-orange-800',
+            'MEDIUM': 'bg-amber-950 text-amber-300 border-amber-800',
+            'LOW': 'bg-blue-950 text-blue-300 border-blue-800',
+            'INFO': 'bg-gray-800 text-gray-300 border-gray-700'
+          }[ind.severity] || 'bg-gray-800 text-gray-300';
+
+          let traceHtml = '';
+          if (ind.evidence_ref) {
+            traceHtml = `
+              <div class="mt-2 pt-2 border-t border-gray-800/80 text-[11px] font-mono text-gray-400 flex flex-wrap gap-x-4">
+                <span><strong>File:</strong> <code>${ind.evidence_ref.source_filename}</code></span>
+                <span><strong>Target:</strong> <code>${ind.evidence_ref.location_type}</code></span>
+                <span><strong>Location Value:</strong> <code>${JSON.stringify(ind.evidence_ref.location_value)}</code></span>
+              </div>
+            `;
+          }
+
+          indCont.innerHTML += `
+            <div class="glass-panel p-4 rounded-lg space-y-2">
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${sevColor}">${ind.severity}</span>
+                  <span class="text-xs font-mono text-cyan-400">[${ind.modality.toUpperCase()}]</span>
+                  <strong class="text-sm text-white">${ind.title}</strong>
+                </div>
+                <div class="text-xs font-mono text-gray-400">
+                  Suspicion: <strong>${Math.round(ind.suspicion_score * 100)}%</strong> | Conf: <strong>${Math.round(ind.confidence * 100)}%</strong>
+                </div>
+              </div>
+              <p class="text-xs text-gray-300">${ind.description}</p>
+              <div class="bg-cyber-900/90 p-2.5 rounded text-xs text-cyan-200/90 font-mono">
+                <span class="text-gray-500 font-bold">TECH FINDING:</span> ${ind.technical_details}
+              </div>
+              ${traceHtml}
+            </div>
+          `;
+        });
+      }
+
+      // Cross-Modal Findings
+      document.getElementById('cm-count').innerText = report.cross_modal_findings.length;
+      const cmCont = document.getElementById('crossmodal-container');
+      cmCont.innerHTML = '';
+      if (report.cross_modal_findings.length === 0) {
+        cmCont.innerHTML = '<div class="text-sm text-gray-400 p-4">No cross-modal correlations generated.</div>';
+      } else {
+        report.cross_modal_findings.forEach(cm => {
+          const isRisk = cm.risk_impact === 'INCREASES_RISK';
+          const isContradiction = cm.status === 'CONTRADICTION';
+          const borderC = isContradiction ? 'border-amber-500' : (isRisk ? 'border-rose-500' : 'border-emerald-500');
+
+          cmCont.innerHTML += `
+            <div class="glass-panel p-4 rounded-lg border-l-4 ${borderC} space-y-2">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-mono font-bold text-cyan-400">[${cm.status}]</span>
+                  <strong class="text-sm text-white">${cm.description}</strong>
+                </div>
+                <span class="text-xs font-mono ${isRisk ? 'text-rose-400' : 'text-emerald-400'} font-bold">${cm.risk_impact}</span>
+              </div>
+              <p class="text-xs text-gray-300 leading-relaxed">${cm.details}</p>
+              <div class="text-[11px] font-mono text-gray-400 pt-1 flex gap-4">
+                <span>Modalities: <code>${cm.modalities_involved.join(' + ')}</code></span>
+                <span>Correlation Confidence: <code>${Math.round(cm.confidence * 100)}%</code></span>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      // Visualizations Tab
+      const vizCont = document.getElementById('visualizations-container');
+      vizCont.innerHTML = '';
+      for (const [mod, res] of Object.entries(report.modality_results)) {
+        if (res.visualizations) {
+          for (const [k, v] of Object.entries(res.visualizations)) {
+            vizCont.innerHTML += `
+              <div class="glass-panel p-4 rounded-xl space-y-2">
+                <div class="flex justify-between items-center text-xs font-mono text-cyan-400">
+                  <span class="uppercase">${mod} FORENSIC MAP</span>
+                  <span>${k.replace('_', ' ').toUpperCase()}</span>
+                </div>
+                <img src="${v}" alt="${k}" class="w-full h-auto rounded border border-gray-800 bg-black/60 object-contain max-h-72" />
+              </div>
+            `;
+          }
+        }
+      }
+
+      // Uncertainty & Checklist
+      const uncList = document.getElementById('uncertainty-list');
+      uncList.innerHTML = '';
+      report.assessment.uncertainty_factors.forEach(u => {
+        uncList.innerHTML += `<li>${u}</li>`;
+      });
+
+      const altList = document.getElementById('alternatives-list');
+      altList.innerHTML = '';
+      report.assessment.alternative_explanations.forEach(a => {
+        altList.innerHTML += `<li>${a}</li>`;
+      });
+
+      const chkCont = document.getElementById('checklist-container');
+      chkCont.innerHTML = '';
+      report.assessment.recommended_human_checks.forEach((chk, idx) => {
+        chkCont.innerHTML += `
+          <label class="flex items-start gap-3 p-2 rounded hover:bg-cyber-800 transition cursor-pointer text-xs text-gray-200">
+            <input type="checkbox" class="mt-0.5 rounded border-gray-700 text-cyan-500 focus:ring-0">
+            <span>${chk}</span>
+          </label>
+        `;
+      });
+
+      // Chain of Custody
+      const custodyTbody = document.getElementById('custody-tbody');
+      custodyTbody.innerHTML = '';
+      report.chain_of_custody.forEach(cust => {
+        const shortHash = cust.sha256.length > 20 ? cust.sha256.substring(0, 12) + '...' + cust.sha256.substring(cust.sha256.length - 8) : cust.sha256;
+        custodyTbody.innerHTML += `
+          <tr class="hover:bg-cyber-800/50">
+            <td class="px-4 py-2.5 text-gray-400">${cust.timestamp.replace('T', ' ').substring(0, 19)}</td>
+            <td class="px-4 py-2.5 text-cyan-300 font-bold">${cust.event}</td>
+            <td class="px-4 py-2.5">${cust.file_name}</td>
+            <td class="px-4 py-2.5 text-gray-400" title="${cust.sha256}"><code>${shortHash}</code></td>
+            <td class="px-4 py-2.5 text-gray-300">${cust.performed_by}</td>
+          </tr>
+        `;
+      });
+
+      repContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function switchTab(tabId) {
+      const tabs = ['tab-findings', 'tab-crossmodal', 'tab-visualizations', 'tab-uncertainty', 'tab-custody'];
+      tabs.forEach(t => {
+        document.getElementById(t).classList.add('hidden');
+        document.getElementById(`btn-${t}`).className = "py-3 px-1 text-gray-400 hover:text-gray-200 flex items-center gap-2";
+      });
+      document.getElementById(tabId).classList.remove('hidden');
+      document.getElementById(`btn-${tabId}`).className = "py-3 px-1 tab-active flex items-center gap-2";
+    }
+
+    // Initialize
+    loadSampleCases();
+  </script>
+</body>
+</html>
